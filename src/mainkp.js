@@ -4,6 +4,6 @@ const PORT = 8880;
 
 app.use(require('./routkp'));
 
-app.listen(PORE, () => {
+app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 });
