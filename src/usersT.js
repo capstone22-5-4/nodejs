@@ -30,7 +30,7 @@ user.sync({force:true}).then(() => {
     return user.create({
         user_id : 'first',
         salt_key : 'sampleSalt',
-        password : 'samplePassword',
+        password : 'ac8d85f18cb8fd8e7f7b4dd0c23cf0a07675b3bf3e491bc62be070ee3699b50d',
         phone : '01012345678'
     });
 });
