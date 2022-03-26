@@ -1,72 +1,137 @@
 var express = require('express');
 var router = express.Router();
-
-var crypto = require('crypto');
-var bodyParser = require('body-parser');
-
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({extended : false}));
-
 const userT = require('./usersT');
 
-router.get('/user/list', function(req, res){
-    userT.findAll({
-            attributes : ['user_id','phone']
-        }).then(function(results){
-        console.log('list request');
-        res.status(200).send(results);
-    }, function(rejected){
-        console.log('selection fail'+rejected);
-        res.status(400).send('list not found');
+var crypto = require('crypto');
+
+var passport = require('passport');
+router.use(passport.initialize());
+router.use(passport.session());
+
+var LocalStrategy = require('passport-local').Strategy;
+var strategy = new LocalStrategy({
+    usernameField:'id',
+    passwordField:'pw',
+},login);
+
+passport.use(strategy);
+passport.serializeUser(function(id, done){
+    console.log(id,'log in session');
+    done(null, id);
+});
+
+passport.deserializeUser(function(id,done) {
+    console.log('read user info');
+    done(null,id);
+});
+
+router.post('/user/signup', signup);
+router.post('/user/login',passport.authenticate('local'), 
+    (req,res) => { 
+        res.send('login success')});
+router.get('/user/logout', (req, res) => {
+    req.logOut();
+    req.session.save(err =>{
+        if(err) throw err;
+        res.status(200).send('logout');
     });
 });
 
-router.post('/user/signup', function(req,res){
+router.get('/user/list', getlist);
+
+router.delete('/user/:id', (req, res) => {
+    res.status(205).send('not manufactured');});
+
+router.get('/user/book/:user_id',getbook);
+
+module.exports = router;
+
+function login(id,pw, done){
+    userT.findOne({
+        where: {user_id : id},
+        attributes: ['id','user_id','salt_key', 'password']
+    })
+    .then((results, rejected) => {
+        if(rejected){
+            console.log(`rejected ${rejected}`);
+            return done(err);
+        }
+        if (!results){
+            return done(null,false, { message : 'Incorrect id'});
+        } 
+        const valid = crypto
+        .createHash('sha256')
+        .update(pw+results.salt_key)
+        .digest('hex')
+        if(!(results.password === valid)){
+            return done(null,false, { message : 'Incorrect pw'});
+        }
+        return done(null,results.id)
+    });
+}
+
+function signup(req,res){
     // const id = req.body.id.replace(/ /g,"");
     // const password = req.body.password.replace(/ /g,"");
     // const phone = req.body.phone;
-    const {id, password, phone} = req.body;
+    const {id, pw, phone} = req.body;
+    if(id && pw && phone){
+        // const salt = crypto.randomBytes(10).toString('base64');
+        const salt = 'sampleSalt'
+        const hash_pw = crypto
+        .createHash('sha256')
+        .update(pw + salt)
+        .digest('hex');
 
-    const salt = crypto.randomBytes(10).toString('base64');
-    const hash_pw = crypto
-    .createHash('sha256')
-    .update(password + salt)
-    .digest('hex');
+        userT.findOrCreate({
+            where: {user_id : id},
+            defaults:{
+                salt_key: salt,
+                password :hash_pw,
+                phone:phone
+            }
+        }).then((results) =>{
+            if(!results[1])
+                res.status(202).send(`${id} is already exists`);
+            else {
+                res.status(200).send(`${id} has been created.`);
+                console.log(`ip : ${req.ip}\ncreate ${id}`);
+            }
+        });
+    } else {
+        res.status(404).send('Please fill it up');
+    }
+}
 
-    userT.findOrCreate({
-        where: {user_id : id},
-        defaults:{
-            salt_key: salt,
-            password :hash_pw,
-            phone:phone
-        }
-    }).then((results) =>{
-        if(!results[1])
-            res.status(202).send(`${id} is already exists`);
-        else {
-            res.status(200).send(`${id} has been created.`);
-            console.log(`ip : ${req.ip}\ncreate ${id}`);
-        }
+function getbook(req,res){
+    var user = req.user;
+    console.log('user',user);
+    console.log(req.params.user_id)
+    if (user && (user == req.params.user_id)){
+        userT.findOne({
+            where: {id : user},
+            attributes: ['user_id', 'phone']
+        })
+        .then((results, rejected) => {
+            if(results)
+                res.status(200).send(results.dataValues);
+            else
+                res.status(201).send(results);
+        });
+    } else {
+        res.status(401).send('log in first');
+    }
+}
+
+function getlist(req, res){
+    userT.findAll({
+            attributes : ['user_id','phone']
+        }).then(
+        (results) => {
+            console.log('list request');
+            res.status(200).send(results);}, 
+        (rejected) =>{
+            console.log('selection fail'+rejected);
+            res.status(400).send('list not found');
     });
-
-});
-
-router.get('/user/signin', (req, res) => {
-
-});
-
-router.delete('/user/:id', (req, res) => {
-    res.status(205).send('not manufactured');
-});
-
-router.get('/user/:user_id',(req,res) => {
-    userT.findOne({
-        where: {user_id : req.params.user_id},
-        attributes: ['user_id', 'phone']
-    })
-    .then((results, rejected) => {
-        res.status(200).send(results.dataValues);
-    });
-});
-
-module.exports = router;
+}
