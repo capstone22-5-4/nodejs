@@ -26,9 +26,9 @@ passport.deserializeUser(function(id,done) {
 });
 
 router.post('/user/signup', signup);
+router.delete('/user/signout', signout);
 router.post('/user/login',passport.authenticate('local'), 
-    (req,res) => { 
-        res.send('login success')});
+    (req,res) => { res.send('login success') });
 router.get('/user/logout', (req, res) => {
     req.logOut();
     req.session.save(err =>{
@@ -38,15 +38,11 @@ router.get('/user/logout', (req, res) => {
 });
 
 router.get('/user/list', getlist);
-
-router.delete('/user/:id', (req, res) => {
-    res.status(205).send('not manufactured');});
-
 router.get('/user/book/:user_id',getbook);
 
 module.exports = router;
 
-function login(id,pw, done){
+function login(id,pw, done){    
     userT.findOne({
         where: {user_id : id},
         attributes: ['id','user_id','salt_key', 'password']
@@ -100,6 +96,20 @@ function signup(req,res){
         });
     } else {
         res.status(404).send('Please fill it up');
+    }
+}
+
+function signout(req,res){
+    var user = req.user;
+    if(user){
+        userT.destroy({where:{id:user}});
+        req.logOut();
+        req.session.save(err =>{
+            if(err) throw err;
+            res.status(200).send('sign out');
+        });
+    } else {
+        res.status(401).send('log in first');
     }
 }
 
