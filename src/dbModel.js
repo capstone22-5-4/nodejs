@@ -31,9 +31,9 @@ var image = sequelize.define('images', {
             autoIncrement : true },
     user_id : { type : Sequelize.INTEGER,
                 allowNull : false },
-    animal_id : { type : Sequelize.INTEGER,
+    animal_id : { type : Sequelize.STRING,
                     allowNull: false },
-    image_url : { type : Sequelize.STRING(16),
+    filename : { type : Sequelize.STRING(16),
                     allowNull : false }
 });
 
