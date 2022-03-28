@@ -1,5 +1,5 @@
 const LocalStrategy = require('passport-local').Strategy;
-const userT = require('./usersT')
+const mydb = require('./dbModel')
 const crypto = require('crypto');
 
 module.exports = (passport) => {
@@ -21,7 +21,7 @@ module.exports = (passport) => {
 }
 
 function login(id,pw, done){    
-    userT.findOne({
+    mydb.users.findOne({
         where: {user_id : id},
         attributes: ['id','user_id','salt_key', 'password']
     })

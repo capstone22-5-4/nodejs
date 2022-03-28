@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const userT = require('./usersT');
+const mydb = require('./dbModel');
 const passport = require('passport');
 
 const crypto = require('crypto');
@@ -35,7 +35,7 @@ function signup(req,res){
         .update(pw + salt)
         .digest('hex');
 
-        userT.findOrCreate({
+        mydb.users.findOrCreate({
             where: {user_id : id},
             defaults:{
                 salt_key: salt,
@@ -58,7 +58,7 @@ function signup(req,res){
 function signout(req,res){
     var user = req.user;
     if(user){
-        userT.destroy({where:{id:user}});
+        mydb.users.destroy({where:{id:user}});
         req.logOut();
         req.session.save(err =>{
             if(err) throw err;
@@ -74,7 +74,7 @@ function getbook(req,res){
     console.log('user',user);
     console.log(req.params.user_id)
     if (user && (user == req.params.user_id)){
-        userT.findOne({
+        mydb.users.findOne({
             where: {id : user},
             attributes: ['user_id', 'phone']
         })
@@ -90,7 +90,7 @@ function getbook(req,res){
 }
 
 function getlist(req, res){
-    userT.findAll({
+    mydb.users.findAll({
             attributes : ['user_id','phone']
         }).then(
         (results) => {

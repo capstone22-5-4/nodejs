@@ -25,9 +25,21 @@ var user = sequelize.define('users', {
                 allowNull : false },
 });
 
+var image = sequelize.define('images', {
+    id : { type : Sequelize.INTEGER,
+            primaryKey : true,
+            autoIncrement : true },
+    user_id : { type : Sequelize.INTEGER,
+                allowNull : false },
+    animal_id : { type : Sequelize.INTEGER,
+                    allowNull: false },
+    image_url : { type : Sequelize.STRING(16),
+                    allowNull : false }
+});
+
 user.sync({force:true}).then(() => {
     console.log('User Table connected');
-    return user.create({
+    user.create({
         user_id : 'first',
         salt_key : 'sampleSalt',
         password : 'ac8d85f18cb8fd8e7f7b4dd0c23cf0a07675b3bf3e491bc62be070ee3699b50d',
@@ -35,4 +47,11 @@ user.sync({force:true}).then(() => {
     });
 });
 
-module.exports = user;
+image.sync({force:true}).then(() => {
+    console.log('Image Table connected');
+});
+
+module.exports ={
+    users : user,
+    images : image
+};
