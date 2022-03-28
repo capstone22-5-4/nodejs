@@ -1,35 +1,14 @@
-var express = require('express');
-var router = express.Router();
+const router = require('express').Router();
 const userT = require('./usersT');
+const passport = require('passport');
 
-var crypto = require('crypto');
+const crypto = require('crypto');
 
-var passport = require('passport');
-router.use(passport.initialize());
-router.use(passport.session());
-
-var LocalStrategy = require('passport-local').Strategy;
-var strategy = new LocalStrategy({
-    usernameField:'id',
-    passwordField:'pw',
-},login);
-
-passport.use(strategy);
-passport.serializeUser(function(id, done){
-    console.log(id,'log in session');
-    done(null, id);
-});
-
-passport.deserializeUser(function(id,done) {
-    console.log('read user info');
-    done(null,id);
-});
-
-router.post('/user/signup', signup);
-router.delete('/user/signout', signout);
-router.post('/user/login',passport.authenticate('local'), 
+router.post('/signup', signup);
+router.delete('/signout', signout);
+router.post('/login',passport.authenticate('local'), 
     (req,res) => { res.send('login success') });
-router.get('/user/logout', (req, res) => {
+router.get('/logout', (req, res) => {
     req.logOut();
     req.session.save(err =>{
         if(err) throw err;
@@ -37,34 +16,11 @@ router.get('/user/logout', (req, res) => {
     });
 });
 
-router.get('/user/list', getlist);
-router.get('/user/book/:user_id',getbook);
+router.get('/list', getlist);
+router.get('/book/:user_id',getbook);
 
 module.exports = router;
 
-function login(id,pw, done){    
-    userT.findOne({
-        where: {user_id : id},
-        attributes: ['id','user_id','salt_key', 'password']
-    })
-    .then((results, rejected) => {
-        if(rejected){
-            console.log(`rejected ${rejected}`);
-            return done(err);
-        }
-        if (!results){
-            return done(null,false, { message : 'Incorrect id'});
-        } 
-        const valid = crypto
-        .createHash('sha256')
-        .update(pw+results.salt_key)
-        .digest('hex')
-        if(!(results.password === valid)){
-            return done(null,false, { message : 'Incorrect pw'});
-        }
-        return done(null,results.id)
-    });
-}
 
 function signup(req,res){
     // const id = req.body.id.replace(/ /g,"");
