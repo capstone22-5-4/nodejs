@@ -7,9 +7,10 @@ url : http://IP:PORT/user/singup
 > POST 형식  
 > content-type : x-www-form-urlencoded  
 #### body : 
-> id : (아이디)  
+> email : (이메일)  
 > pw : (비밀번호)  
-> phone : (핸드폰번호)  
+> name : (이름)  
+> nickname : (닉네임)
 #
 ## 로그인
 url : http://IP:PORT/user/login  
@@ -17,10 +18,11 @@ url : http://IP:PORT/user/login
 > POST 형식  
 > content-type : x-www-form-urlencoded  
 #### body :
-> id : (아이디)  
+> email : (이메일)  
 > pw : (비밀번호)  
 #
 ## 로그아웃
+로그인 되어있는 상태에서  
 url : http://IP:PORT/user/logout
 ### header : 
 > GET 형식
@@ -30,3 +32,10 @@ url : http://IP:PORT/user/logout
 url : http://IP:PORT/user/signout
 ### header : 
 > DELETE 형식
+#
+## 사용자 정보
+로그인 되어있는 상태에서  
+url : http://IP:PORT/user/detail  
+nickname 과 email 반환
+### header : 
+> GET 형식
