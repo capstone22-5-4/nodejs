@@ -4,7 +4,7 @@ const crypto = require('crypto');
 
 module.exports = (passport) => {
     var strategy = new LocalStrategy({
-        usernameField:'id',
+        usernameField:'email',
         passwordField:'pw',
     },login);
     
@@ -20,10 +20,10 @@ module.exports = (passport) => {
     });   
 }
 
-function login(id,pw, done){    
+function login(email,pw, done){    
     mydb.users.findOne({
-        where: {user_id : id},
-        attributes: ['id','user_id','salt_key', 'password']
+        where: {email : email},
+        attributes: ['id','salt_key', 'password']
     })
     .then((results, rejected) => {
         if(rejected){
