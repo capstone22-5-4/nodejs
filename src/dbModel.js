@@ -33,10 +33,8 @@ var image = sequelize.define('images', {
             autoIncrement : true },
     user_id : { type : Sequelize.INTEGER,
                 allowNull : false },
-    animal_id : { type : Sequelize.STRING,
-                    allowNull: false },
-    filename : { type : Sequelize.STRING(16),
-                    allowNull : false }
+    animals : { type : Sequelize.JSON,
+                    allowNull: true },
 });
 
 user.sync({force:true}).then(() => {
@@ -52,6 +50,10 @@ user.sync({force:true}).then(() => {
 
 image.sync({force:true}).then(() => {
     console.log('Image Table connected');
+    image.create({
+        user_id : 1,
+        animals : { '앵무새' : '앵무새.jpg'},
+    })
 });
 
 module.exports ={
