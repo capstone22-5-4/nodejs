@@ -2,6 +2,7 @@
 내부 포트번호 : 8880
 #
 ## 사용자 등록
+이메일, 닉네임 중복 금지  
 url : http://IP:PORT/user/singup  
 #### header :
 > POST 형식  
