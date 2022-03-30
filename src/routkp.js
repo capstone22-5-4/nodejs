@@ -84,7 +84,6 @@ function getdetail(req,res){
             attributes: ['nickname', 'email']
         })
         .then((results, rejected) => {
-            console.log(results);
             if(results)
                 res.status(200).send(results.dataValues);
             else
