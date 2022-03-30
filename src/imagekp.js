@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// const fs = require('fs');
+const fs = require('fs');
 const mydb = require('./dbModel');
 const passport = require('passport');
 
@@ -10,21 +10,36 @@ const upload = multer({
     dest: __dirname+'/images/'
 });
 
+const animal_list = fs.readFileSync('./animals.txt', 'utf8').split('\n');
+
 router.post('/:animal',upload.single('image'), putImage);
-router.get('/:animal', getImage);
+router.get('/books', getBooks);
+
+router.get('/bento', function(req, res){
+    res.send('hello bento! <img src="/image/앵무새.jpg">')
+});
+
+router.use(express.static(__dirname+ '/images'));
 
 module.exports = router;
 
-function getImage(req,res){
-    if(user){
-        mydb.findOne({
-            where:{}
-        })
-    }
+function getBooks(req,res){
+    var user = req.user;
+    if (user)
+        mydb.images.findOne({
+            where : { user_id : user },
+            attributes : ['animals']
+        }).then((results, rejected) => {
+            if (results){
+                res.status(200).send(results.animals);
+            }
+            else res.status(202).send('no image');
+        });
+    else res.status(202).send('login first');
 }
 
 function putImage(req,res){
-    const { filename } = req.file
+    const { filename } = req.file;
     const { name } = req.body;
     var user = req.user;
     if(user){
