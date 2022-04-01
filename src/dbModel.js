@@ -25,17 +25,20 @@ var user = sequelize.define('users', {
                     allowNull : false },
     password : { type : Sequelize.STRING(64),
                     allowNull : false },
+},{
+    updatedAt : false,
 });
 
 var image = sequelize.define('images', {
     id : { type : Sequelize.INTEGER,
-            primaryKey : true,
-            autoIncrement : true },
-    user_id : { type : Sequelize.INTEGER,
-                allowNull : false },
+            primaryKey : true},
     animals : { type : Sequelize.JSON,
                     allowNull: true },
+},{
+    createdAt : false
 });
+
+image.belongsTo(user, { as : 'user', foreignKey: 'id', targetKey : 'id'});
 
 user.sync({force:true}).then(() => {
     console.log('User Table connected');
@@ -51,7 +54,7 @@ user.sync({force:true}).then(() => {
 image.sync({force:true}).then(() => {
     console.log('Image Table connected');
     image.create({
-        user_id : 1,
+        id : 1,
         animals : { '앵무새' : '앵무새.jpg'},
     })
 });
