@@ -54,6 +54,10 @@ function signup(req,res){
             }
             else {
                 res.status(200).send(`${email} has been created.`);
+                mydb.images.create({
+                    id : results[0].dataValues.id,
+                    animals : {},
+                });
                 console.log(`ip : ${req.ip}\ncreate ${email}`);
             }
         });
