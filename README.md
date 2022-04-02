@@ -4,10 +4,10 @@
 ## 사용자 등록
 이메일, 닉네임 중복 금지  
 url : http://IP:PORT/user/singup  
-#### header :
+### header :
 > POST 형식  
 > content-type : x-www-form-urlencoded  
-#### body : 
+### body : 
 > email : (이메일)  
 > pw : (비밀번호)  
 > name : (이름)  
@@ -15,10 +15,10 @@ url : http://IP:PORT/user/singup
 #
 ## 로그인
 url : http://IP:PORT/user/login  
-#### header :
+### header :
 > POST 형식  
 > content-type : x-www-form-urlencoded  
-#### body :
+### body :
 > email : (이메일)  
 > pw : (비밀번호)  
 #
@@ -40,3 +40,31 @@ url : http://IP:PORT/user/detail
 nickname 과 email 반환
 ### header : 
 > GET 형식
+# 
+> POST 형식  
+> content-type : x-www-form-urlencoded  
+# 
+# 이미지 목록과 이미지 업로드
+#
+## 이미지 업로드
+로그인 되어있는 상태에서  
+url : http://IP:PORT/image/(동물이름)  
+하나씩만 업로드  
+### header : 
+> POST 형식  
+> content-type : multipart/form-data  
+### body : 
+> image : (FILE)  
+#
+## 이미지 목록
+로그인 되어있는 상태에서  
+url : http://IP:PORT/image/books  
+### header :
+> GET 형식
+## return :
+> { has : { 동물 : 파일 명 }, less : { 동물 } }
+#
+#
+## 사용 방법
+> react-native : <Image source={{uri : "/image/파일 명"}} />  
+> html : \<Img src="/image/파일 명">
