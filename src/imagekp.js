@@ -6,8 +6,26 @@ const mydb = require('./dbModel');
 const passport = require('passport');
 
 const multer = require('multer');
+const storage = multer.diskStorage({
+    destination(req, file, callback){
+        callback(null, process.env.PWD+'/images/');
+    },
+    filename(req, file, callback){
+        var user = req.user;
+        var result = "undifined";
+        if(user){
+            result = user.toString() + '_' +Date.now().toString();
+        }
+        result += '.'+file.originalname.split(".").pop();
+        callback(null,result);
+    }
+});
+
 const upload = multer({
-    dest: __dirname+'/images/'
+    storage,
+    limits:{
+        files:10,
+    }
 });
 
 const animal_list = fs.readFileSync('./animals.txt', 'utf8').split('\n');
@@ -15,44 +33,28 @@ const animal_list = fs.readFileSync('./animals.txt', 'utf8').split('\n');
 router.post('/:animal',upload.single('image'), putImage);
 router.get('/books', getBooks);
 
-router.get('/bento', function(req, res){
-    res.send('hello bento! <img src="/image/앵무새.jpg">')
-});
 
-router.use(express.static(__dirname+ '/images'));
+router.use(express.static(__dirname + '/images'));
 
 module.exports = router;
 
-function getBooks(req,res){
-    var user = req.user;
-    if (user)
-        mydb.images.findOne({
-            where : { user_id : user },
-            attributes : ['animals']
-        }).then((results, rejected) => {
-            if (results){
-                res.status(200).send(results.animals);
-            }
-            else res.status(202).send('no image');
-        });
-    else res.status(202).send('login first');
-}
-
 function putImage(req,res){
     const { filename } = req.file;
-    const { name } = req.body;
     var user = req.user;
+
     if(user){
-        mydb.images.findOrCreate({
-            where: { user_id:user, animal_id:req.params.animal },
-            defaults:{
-                filename: filename
-            }
+        mydb.images.findOne({
+            where: { id : user},
+            attributes : ['animals'],
         }).then((results) => {
-            if(!results[1])
-                res.status(202).send(`${req.params.animal} is already exists`);
-            else
-                res.status(200).send(`created`);
+            var has_list = results.dataValues.animals;
+            has_list[req.params.animal] = filename;
+
+            mydb.images.update( 
+                { animals : has_list},
+                { where: { id: user}}).then(results => {
+                    res.status(200).send('update lists');
+                })
         });
     } else{
         res.status(401).send('log in first');
@@ -67,4 +69,25 @@ function putImage(req,res){
     // console.log("destinatin에 저장된 파일 명 : ", filename);
     // console.log("업로드된 파일의 전체 경로 ", path);
     // console.log("파일의 바이트(byte 사이즈)", size);
+}
+
+function getBooks(req,res){
+    var user = req.user;
+    if (user)
+        mydb.images.findOne({
+            where : { id : user },
+            attributes : ['animals']
+        }).then((results, rejected) => {
+            if (results){
+                var less_animals = animal_list;
+                for (const key of Object.keys(results.animals)){
+                    const idx = less_animals.indexOf(key);
+                    less_animals.splice(idx,1);
+                }
+                res_content = new Object ({has : results.animals, less : less_animals})
+                res.status(200).send(res_content);
+            }
+            else res.status(202).send('no user');
+        });
+    else res.status(202).send('login first');
 }
