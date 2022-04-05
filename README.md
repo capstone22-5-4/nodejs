@@ -41,9 +41,9 @@ url : http://IP:PORT/user/logout
 ### header : 
 > GET 형식
 ### return : 
-|     cause     | status | content                                    |
-|:-------------:|:------:|--------------------------------------------|
-| 로그아웃 성공 |   200  | { "email": "email", "nickname":"nickname"} |
+|     cause     | status | content |
+|:-------------:|:------:|---------|
+| 로그아웃 성공 |   200  | "logout" |
 #
 ## 사용자 삭제
 로그인 되어있는 상태에서  
