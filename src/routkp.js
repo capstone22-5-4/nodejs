@@ -8,7 +8,9 @@ const Op = require('sequelize').Op;
 router.post('/signup', signup);
 router.delete('/signout', signout);
 router.post('/login',passport.authenticate('local'), 
-    (req,res) => { res.send('login success') });
+    (req,res) => { 
+        delete req.user.id;
+        res.send(req.user); });
 router.get('/logout', (req, res) => {
     req.logOut();
     req.session.save(err =>{

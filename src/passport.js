@@ -9,21 +9,22 @@ module.exports = (passport) => {
     },login);
     
     passport.use(strategy);
-    passport.serializeUser(function(id, done){
-        console.log(id,'log in session');
-        done(null, id);
+    passport.serializeUser(function(user_info, done){
+        console.log(user_info.id,'log in session');
+        done(null, user_info.id);
     });
     
-    passport.deserializeUser(function(id,done) {
+    passport.deserializeUser(function(user_info,done) {
         console.log('read user info');
-        done(null,id);
+        done(null,user_info);
     });   
 }
 
 function login(email,pw, done){    
+    var user_info = new Object();
     mydb.users.findOne({
         where: {email : email},
-        attributes: ['id','salt_key', 'password']
+        attributes: ['id','salt_key', 'password', 'nickname']
     })
     .then((results, rejected) => {
         if(rejected){
@@ -41,6 +42,11 @@ function login(email,pw, done){
         if(!(results.password === valid)){
             return done(null,false, { message : 'Incorrect pw'});
         }
-        return done(null,results.id)
+
+        user_info.email = email;
+        user_info.id = results.id;
+        user_info.nickname = results.nickname;
+
+        return done(null, user_info);
     });
 }
