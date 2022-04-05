@@ -40,7 +40,7 @@ var image = sequelize.define('images', {
 
 image.belongsTo(user, { as : 'user', foreignKey: 'id', targetKey : 'id'});
 
-user.sync({force:true}).then(() => {
+user.sync().then(() => {
     console.log('User Table connected');
     user.create({
         email : 'first@abcd.efg',
@@ -51,7 +51,7 @@ user.sync({force:true}).then(() => {
     });
 });
 
-image.sync({force:true}).then(() => {
+image.sync().then(() => {
     console.log('Image Table connected');
     image.create({
         id : 1,
