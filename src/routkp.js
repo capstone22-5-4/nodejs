@@ -52,7 +52,7 @@ function signup(req,res){
                     res.status(202).send(`email ${email} is already exists`);
                 else if ( nickname == results[0].dataValues.email)
                     res.status(202).send(`nickname ${nickname} is already exists`);
-                else res.status(202).send(`something wrong in singup`);
+                else res.status(202).send(`something wrong in signup`);
             }
             else {
                 res.status(200).send(`${email} has been created.`);
