@@ -75,7 +75,7 @@ nickname 과 email 반환
 #
 ## 이미지 업로드
 로그인 되어있는 상태에서  
-url : http://IP:PORT/image/(동물이름)  
+url : http://IP:PORT/book/upload/(동물이름)  
 하나씩만 업로드  
 ### header : 
 > POST 형식  
@@ -90,16 +90,28 @@ url : http://IP:PORT/image/(동물이름)
 #
 ## 이미지 목록
 로그인 되어있는 상태에서  
-url : http://IP:PORT/image/books  
+url : http://IP:PORT/book/list  
 ### header :
 > GET 형식
 ## return :
 |     cause     | status | content                                                 |
 |:-------------:|:------:|---------------------------------------------------------|
-|   요청 성공   |   200  | { has : { 동물 : 파일 명, ... }, less : { 동물, ... } } |
-| 비로그인 상태 |   401  | "login first"                                           |
+|   요청 성공   |   200  | { has : { 동물 : 파일 명, ... }, less : { 동물, ... } }   |
+| 비로그인 상태 |   401  | "login first"                                            |
+#
+## 이미지 목록
+로그인 되어있는 상태에서  
+url : http://IP:PORT/book/list/(닉네임)  
+### header :
+> GET 형식
+## return :
+|     cause     | status | content                                                 |
+|:-------------:|:------:|---------------------------------------------------------|
+|   요청 성공   |   200  | { has : { 동물 : 파일 명, ... }, less : { 동물, ... } }   |
+|  닉네임 없음  |   202  | "check the nickname"                                     |
+| 비로그인 상태 |   401  | "login first"                                            |
 #
 #
 ## 사용 방법
-> react-native : <Image source={{uri : "/image/파일 명"}} />  
-> html : \<Img src="/image/파일 명">
+> react-native : <Image source={{uri : "/book/파일 명"}} />  
+> html : \<Img src="/book/파일 명">

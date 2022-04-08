@@ -17,9 +17,9 @@ require('./passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/image', require('./imagekp'));
+app.use('/book', require('./bookkp'));
 
-app.use('/user',require('./routkp'));
+app.use('/user',require('./userkp'));
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
