@@ -1,5 +1,8 @@
 # 2022 캡스톤디자인 5-4
 내부 포트번호 : 8880
+
+![ERD_04_08](https://user-images.githubusercontent.com/33221641/162347728-ec820f79-cc6b-4785-8fc6-fd38c786c3f3.png)
+
 #
 ## 사용자 등록
 이메일, 닉네임 중복 금지  
