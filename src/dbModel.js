@@ -86,35 +86,40 @@ var user_achivement = sequelize.define('user_achive', {
                 defaultValue : {} }
 }, { updatedAt : false });
 
-// var to_feed = sequelize.define('to_feed', {
-//     id : { type : Sequelize.INTEGER, 
-//             allowNull : false },
-//     food_id : { type : Sequelize.INTEGER,
-//             defaultValue : 0 }
-// }, { createdAt : false, updatedAt : false });
+var to_feed = sequelize.define('to_feed', {
+    id : { type : Sequelize.INTEGER, 
+            allowNull : false,
+            primaryKey : true },
+    food_id : { type : Sequelize.INTEGER,
+            defaultValue : 0,
+            primaryKey : true }
+}, { createdAt : false, updatedAt : false });
 
 
-user.sync({force:true}).then(() => {console.log('User table connected');});
-image.sync({force:true}).then(() => {console.log('Image table connected');});
+user.sync({force:true}).then(() => {
+    console.log('User table connected');
+    user.create({
+        email : 'first@abcd.efg',
+        nickname : 'sample',
+        name : 'caps',
+        salt_key : 'sampleSalt',
+        password : 'ac8d85f18cb8fd8e7f7b4dd0c23cf0a07675b3bf3e491bc62be070ee3699b50d',
+    });});
+image.sync({force:true}).then(() => {console.log('Image table connected');
+    image.create({
+        id : 1,
+        animals : { '앵무새' : '앵무새.jpg'},
+    });});
 score.sync({force:true}).then(() => {console.log('user score table connected');});
 animals.sync({force:true}).then(() => {console.log('base animal table connected');});
 foods.sync({force:true}).then(() => {console.log('base food table connected');});
 has_foods.sync({force:true}).then(() => {console.log('user foods table connected');});
 achivements.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
 user_achivement.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
+to_feed.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
 
-user.create({
-    email : 'first@abcd.efg',
-    nickname : 'sample',
-    name : 'caps',
-    salt_key : 'sampleSalt',
-    password : 'ac8d85f18cb8fd8e7f7b4dd0c23cf0a07675b3bf3e491bc62be070ee3699b50d',
-});
 
-image.create({
-    id : 1,
-    animals : { '앵무새' : '앵무새.jpg'},
-});
+
 
 module.exports ={
     users : user,
