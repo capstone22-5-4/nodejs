@@ -59,7 +59,7 @@ function putImage(req,res){
     } else res.status(401).send('log in first');
 }
 
-async function getMyBook(req,res){
+function getMyBook(req,res){
     var user = req.user;
     if (user){
         userdb.images.findOne({
@@ -78,7 +78,7 @@ async function getMyBook(req,res){
     } else              { res.status(401).send('login first');}
 }
 
-async function getOtherBook(req,res){
+function getOtherBook(req,res){
     var user = req.user;
     if (user){
         userdb.user.findOne({

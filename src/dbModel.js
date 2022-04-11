@@ -1,4 +1,5 @@
 var Sequelize = require('sequelize');
+const fs = require('fs');
 var sequelize = new Sequelize('capstone', 'caps', 'caps54',{
     dialect : 'mysql',
     host : 'localhost',
@@ -53,7 +54,8 @@ var animals = sequelize.define('animals', {
 
 var foods = sequelize.define('foods', {
     id : {          type : Sequelize.INTEGER,
-                    primaryKey : true },
+                    primaryKey : true,
+                    autoIncrement : true },
     food_name : {   type : Sequelize.STRING,
                     allowNull : false },
     image_url : {   type : Sequelize.STRING,
@@ -109,16 +111,35 @@ image.sync({force:true}).then(() => {console.log('Image table connected');
     image.create({
         id : 1,
         animals : { '앵무새' : '앵무새.jpg'},
-    });});
-score.sync({force:true}).then(() => {console.log('user score table connected');});
-animals.sync({force:true}).then(() => {console.log('base animal table connected');});
-foods.sync({force:true}).then(() => {console.log('base food table connected');});
-has_foods.sync({force:true}).then(() => {console.log('user foods table connected');});
+    });
+});
+score.sync({force:true}).then(() => {console.log('user score table connected');
+    score.create({
+        id : 1
+    });
+});
+animals.sync({force:true}).then(() => {console.log('base animal table connected');
+    const animal_list = fs.readFileSync('./animals.txt', 'utf8').split('\n');
+    for (const key of animal_list){
+        animals.create({ animal_name : key }); 
+    }
+});
+foods.sync({force:true}).then(() => {console.log('base food table connected');
+    foods.create({
+        food_name : 'dummy_food',
+        image_url : 'dummy_food.png',
+        food_cost : 100
+    });
+});
+has_foods.sync({force:true}).then(() => {console.log('user foods table connected');
+    has_foods.create({
+        id : 1,
+        foods : {}
+    });
+});
+to_feed.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
 achivements.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
 user_achivement.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
-to_feed.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
-
-
 
 
 module.exports ={
