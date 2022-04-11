@@ -59,17 +59,26 @@ function putImage(req,res){
     } else res.status(401).send('log in first');
 }
 
-function getMyBook(req,res){
+async function getMyBook(req,res){
     var user = req.user;
     if (user){
-        var resblist = getBook(user_id);
-
-        if (resblist)   { res.status(200).send(resblist);}
-        else            { res.status(202).send('no user');}
+        userdb.images.findOne({
+            where : { id : user },
+            attributes : ['animals']
+        }).then((results) => {
+            if (results){
+                var less_animals = animal_list;
+                for (const key of Object.keys(results.animals)){
+                    const idx = less_animals.indexOf(key);
+                    less_animals.splice(idx,1);
+                }
+                          res.status(200).send({has : results.animals, less : less_animals});
+            } else      { res.status(202).send('no user')}
+        });
     } else              { res.status(401).send('login first');}
 }
 
-function getOtherBook(req,res){
+async function getOtherBook(req,res){
     var user = req.user;
     if (user){
         userdb.user.findOne({
@@ -77,27 +86,20 @@ function getOtherBook(req,res){
             attributes : ['id']
         }).then((results) => {
             if (results){ 
-                var resblist = getBook(results.id);
-                if (resblist)   { res.stauts(200).send(resblist);}
-                else            { res.status(202).send('no user');}
+                userdb.images.findOne({
+                    where : { id : results.id },
+                    attributes : ['animals']
+                }).then((results) => {
+                    if (results){
+                        var less_animals = animal_list;
+                        for (const key of Object.keys(results.animals)){
+                            const idx = less_animals.indexOf(key);
+                            less_animals.splice(idx,1);
+                        }
+                                  res.status(200).send({has : results.animals, less : less_animals});
+                    } else      { res.status(202).send('no user')}
+                });
             } else              { res.status(202).send('check the nickname');}
         })
     } else                      { res.status(401).send('login first');}
-}
-
-function getBook(user_id){
-    userdb.images.findOne({
-        where : { id : user_id },
-        attributes : ['animals']
-    }).then((results) => {
-        if (results){
-            var less_animals = animal_list;
-            for (const key of Object.keys(results.animals)){
-                const idx = less_animals.indexOf(key);
-                less_animals.splice(idx,1);
-            }
-            return new Object ({has : results.animals, less : less_animals})
-        }
-    });
-    return null;
 }
