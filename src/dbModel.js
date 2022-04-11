@@ -144,5 +144,12 @@ user_achivement.sync({force:true}).then(() => {console.log('base achivemnets tab
 
 module.exports ={
     users : user,
-    images : image
+    images : image,
+    score : score,
+    animals : animals,
+    foods : foods,
+    has_foods : has_foods,
+    to_feed : to_feed,
+    achivements : achivements,
+    user_achivement : user_achivement
 };

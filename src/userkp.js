@@ -60,6 +60,15 @@ function signup(req,res){
                     id : results[0].dataValues.id,
                     animals : {},
                 });
+                mydb.score.create({
+                    id : results[0].dataValues.id,
+                });
+                mydb.has_foods.create({
+                    id : results[0].dataValues.id,
+                });
+                mydb.user_achivement({
+                    id : results[0].dataValues.id,
+                });
                 console.log(`ip : ${req.ip}\ncreate ${email}`);
             }
         });
