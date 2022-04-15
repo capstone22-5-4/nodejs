@@ -19,7 +19,9 @@ app.use(passport.session());
 
 app.use('/book', require('./bookkp'));
 
-app.use('/user',require('./userkp'));
+app.use('/user', require('./userkp'));
+
+app.use('/', require('./interactkp'));
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);

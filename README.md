@@ -1,4 +1,5 @@
 # 2022 캡스톤디자인 5-4
+git clone -> npm install -> node ./src/main.js  
 내부 포트번호 : 8880
 
 ![ERD_04_08](https://user-images.githubusercontent.com/33221641/162347728-ec820f79-cc6b-4785-8fc6-fd38c786c3f3.png)
@@ -115,3 +116,9 @@ url : http://IP:PORT/book/list/(닉네임)
 ## 사용 방법
 > react-native : <Image source={{uri : "/book/파일 명"}} />  
 > html : \<Img src="/book/파일 명">
+#
+#
+## 이미지 분석 웹 페이지
+url : http://IP:PORT/analmal
+### header :
+> GET 형식
