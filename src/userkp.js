@@ -66,7 +66,7 @@ function signup(req,res){
                 mydb.has_foods.create({
                     id : results[0].dataValues.id,
                 });
-                mydb.user_achivement({
+                mydb.user_achivement.create({
                     id : results[0].dataValues.id,
                 });
                 console.log(`ip : ${req.ip}\ncreate ${email}`);
