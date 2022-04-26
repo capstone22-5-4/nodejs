@@ -11,8 +11,6 @@ router.post('/addscore', addscore);
 router.post('/buyfood', buyfood);
 router.get('/shop', foodlist);
 router.get('/analmal',(req,res) =>{
-    console.log(__dirname);
-    console.log('/base/index.html');
     res.sendFile('/base/index.html', { root : process.env.PWD });
 });
 
