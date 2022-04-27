@@ -28,6 +28,8 @@ const animal_list = fs.readFileSync('./animals.txt', 'utf8').split('\n');
 
 router.post('/upload/:animal',upload.single('image'), putImage);
 router.get('/list', getMyBook);
+router.get('/list/has', getHas);
+router.get('/list/less', getLess);
 router.get('/list/:nickname', getOtherBook);
 
 router.use(express.static(process.env.PWD + '/user_images'));
@@ -41,7 +43,6 @@ module.exports = router;
 function putImage(req,res){
     const { filename } = req.file;
     var user = req.user;
-
     if(user){
         userdb.images.findOne({
             where: { id : user},
@@ -59,6 +60,48 @@ function putImage(req,res){
     } else res.status(401).send('log in first');
 }
 
+function getHas(req,res){
+    var user = req.user;
+    if (user){
+        userdb.images.findOne({
+            where : {id: user},
+            attributes : ['animals']
+        }).then((results) => {
+            if (results){
+                var sendList = new Array();
+                var index = 1;
+                for (const key of Object.keys(results.animals)){
+                    var data = new Object();
+                    data.no = index++;
+                    data.animalName = key;
+                    data.photo = results.animals[key];
+                    sendList.push(data);
+                }
+                                  res.status(200).send(JSON.stringify(sendList));
+            }else               { res.status(202).send('no user');}
+        });
+    } else                      { res.status(401).send('login first');}
+}
+
+function getLess(req,res){
+    var user = req.user;
+    if (user){
+        userdb.images.findOne({
+            where : { id : user },
+            attributes : ['animals']
+        }).then((results) => {
+            if (results){
+                var less_animals = animal_list;
+                for (const key of Object.keys(results.animals)){
+                    const idx = less_animals.indexOf(key);
+                    less_animals.splice(idx,1);
+                }
+                          res.status(200).send(less_animals);
+            } else      { res.status(202).send('no user'); }
+        });
+    } else              { res.status(401).send('login first'); }
+}
+
 function getMyBook(req,res){
     var user = req.user;
     if (user){
@@ -73,9 +116,9 @@ function getMyBook(req,res){
                     less_animals.splice(idx,1);
                 }
                           res.status(200).send({has : results.animals, less : less_animals});
-            } else      { res.status(202).send('no user')}
+            } else      { res.status(202).send('no user'); }
         });
-    } else              { res.status(401).send('login first');}
+    } else              { res.status(401).send('login first'); }
 }
 
 function getOtherBook(req,res){
