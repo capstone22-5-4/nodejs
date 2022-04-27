@@ -198,9 +198,18 @@
 						prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
 					labelContainer.childNodes[i].innerHTML = classPrediction;
 				}
+				const selectedImage = document.getElementById('filePicker').files[0];
 				
+				// send to server
+				var formData = new FormData();
+				await formData.append('image',selectedImage);
+				var request = new XMLHttpRequest();
+				await request.open("POST", "http://3.35.222.94:8880/book/upload/"+prediction[0].className);
+				request.send(formData);
+
 				//이부분에서 만약 확률이 75% 넘으면 서버? 로 전송
 			}
+
 		</script>
 	</body>
 </html>
