@@ -18,82 +18,26 @@
 	</head>
 
 	<body>
-		<nav class="navbar navbar-expand-lg navbar-light nav-distance">
-			<div class="container-fluid">
-				<a class="navbar-brand" href="#">사진 올리기</a>
-				<button
-					class="navbar-toggler"
-					type="button"
-					data-bs-toggle="collapse"
-					data-bs-target="#navbarSupportedContent"
-					aria-controls="navbarSupportedContent"
-					aria-expanded="false"
-					aria-label="Toggle navigation"
-				>
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="#">Home</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">Link</a>
-						</li>
-						<li class="nav-item dropdown">
-							<a
-								class="nav-link dropdown-toggle"
-								href="#"
-								id="navbarDropdown"
-								role="button"
-								data-bs-toggle="dropdown"
-								aria-expanded="false"
-							>
-								Dropdown
-							</a>
-							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li><a class="dropdown-item" href="#">Action</a></li>
-								<li><a class="dropdown-item" href="#">Another action</a></li>
-								<li><hr class="dropdown-divider" /></li>
-								<li><a class="dropdown-item" href="#">Something else here</a></li>
-							</ul>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link disabled">Disabled</a>
-						</li>
-					</ul>
-					<form class="d-flex">
-						<input
-							class="form-control me-2"
-							type="search"
-							placeholder="Search"
-							aria-label="Search"
-						/>
-						<button class="btn btn-outline-success" type="submit">Search</button>
-					</form>
-				</div>
-			</div>
-		</nav>
-		
-		
-		
-		
+
+
 		<section>
+			<img class= "img1" src="https://ifh.cc/g/06L6OO.png" >
 			<div class="preview"></div>
 
-			<button id="triggerUpload" class="btn">Preview Image</button>
+			<button id="triggerUpload" class="btn">사진 올리기</button>
 			<input type="file" id="filePicker" />
 			<div class="fileName"></div>
-		</section>
-		<div id="webcam-container"></div>
-		
-		
-		<section class="section">
+
+			<div class="uploadServer">
+				<button class="btn1" type="button" onclick="predict()">등록하기</button>
+			</div>
 			<div id="label-container"></div>
-			<button type="button" onclick="predict()">등록하기</button>
-			
+			</div>
 		</section>
-		
+
+
+
+
 
 		<!-- Optional JavaScript; choose one of the two! -->
 
@@ -192,24 +136,23 @@
 				// predict can take in an image, video or canvas html element
 				const prediction = await model.predict(image, false);
 				prediction.sort((a,b) => parseFloat(b.probability)-parseFloat(a.probability));
-				
-				for (let i = 0; i < 3; i++) {
-					const classPrediction =
-						prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
-					labelContainer.childNodes[i].innerHTML = classPrediction;
-				}
-				const selectedImage = document.getElementById('filePicker').files[0];
-				
+
 				// send to server
+				const selectedImage = document.getElementById('filePicker').files[0];
 				var formData = new FormData();
 				await formData.append('image',selectedImage);
 				var request = new XMLHttpRequest();
-				await request.open("POST", "http://3.35.222.94:8880/book/upload/"+prediction[0].className);
+				request.open("POST", "http://3.35.222.94:8880/book/upload/"+prediction[0].className);
+				
+				request.onreadystatechange = () =>{
+					if(request.readyState === XMLHttpRequest.DONE)
+						console.log(request);
+				}
 				request.send(formData);
-
-				//이부분에서 만약 확률이 75% 넘으면 서버? 로 전송
+				alert(prediction[0].className+" 등록");
+				
+				//이부분에서 만약 확률이 75% 넘으면 서버?te 로 전송
 			}
-
 		</script>
 	</body>
 </html>
