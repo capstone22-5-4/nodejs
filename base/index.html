@@ -143,16 +143,21 @@
 				await formData.append('image',selectedImage);
 				var request = new XMLHttpRequest();
 				request.open("POST", "http://3.35.222.94:8880/book/upload/"+prediction[0].className);
-				
-				request.onreadystatechange = () =>{
-					if(request.readyState === XMLHttpRequest.DONE)
-						console.log(request);
+
+				function reqListener(){
+					if (this.status === 401)
+						alert("로그인을 먼저 해주세요");
+					if (this.status === 200)
+						alert(prediction[0].className+" 등록 완료");
 				}
+
+				request.addEventListener("load", reqListener);
 				request.send(formData);
-				alert(prediction[0].className+" 등록");
 				
 				//이부분에서 만약 확률이 75% 넘으면 서버?te 로 전송
 			}
+
+
 		</script>
 	</body>
 </html>
