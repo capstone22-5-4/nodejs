@@ -93,10 +93,13 @@ function getLess(req,res){
             attributes : ['animals']
         }).then((results) => {
             if (results){
-                var less_animals = animal_list;
+                let less_animals = [];
+                for (const i in animal_list)
+                    less_animals.push(animal_list[i]);
                 for (const key of Object.keys(results.animals)){
                     const idx = less_animals.indexOf(key);
-                    less_animals.splice(idx,1);
+                    if(idx != -1)
+                        less_animals.splice(idx,1);
                 }
                           res.status(200).send(less_animals);
             } else      { res.status(202).send('no user'); }
