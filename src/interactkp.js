@@ -11,10 +11,12 @@ router.post('/addscore', addscore);
 router.post('/buyfood', buyfood);
 router.get('/shop', foodlist);
 router.get('/analmal',(req,res) =>{
-    res.sendFile('/base/index.html', { root : process.env.PWD });
+    res.sendFile('/home/ubuntu/nodejs/base/index.html');
+    // res.sendFile('/base/index.html', { root : process.env.PWD });
 });
 
-router.use(express.static(process.env.PWD+'/base'));
+router.use(express.static('/home/ubuntu/nodejs/base'));
+// router.use(express.static(process.env.PWD+'/base'));
 
 module.exports = router;
 

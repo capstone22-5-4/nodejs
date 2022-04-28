@@ -8,7 +8,8 @@ const passport = require('passport');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination(req, file, callback){
-        callback(null, process.env.PWD+'/user_images/');
+        callback(null, '/home/ubuntu/nodejs/user_images/');
+        // callback(null, process.env.PWD+'/user_images/');
     },
     filename(req, file, callback){
         var user = req.user;
@@ -32,7 +33,8 @@ router.get('/list/has', getHas);
 router.get('/list/less', getLess);
 router.get('/list/:nickname', getOtherBook);
 
-router.use(express.static(process.env.PWD + '/user_images'));
+router.use(express.static('/home/ubuntu/nodejs/user_images'));
+// router.use(express.static(process.env.PWD + '/user_images'));
 
 module.exports = router;
 
