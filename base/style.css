@@ -38,14 +38,18 @@ input[type=file]{
   padding-top: 10px;
   font-weight: 300;
 }
-img {
-    width: 230px;
+img{
+  width:200px;
+  object-fit: contain;
+}
+.img1 {
+    width: 160px;
 	  object-fit: contain;
-  }
+}
 .preview{
   position: relative;
-  width: 250px;
-  height: 250px;
+  width: 200px;
+  height: 200px;
   background: #FFF7EB;
   border-radius: 16%;
   margin: 0 auto 25px auto;
@@ -82,7 +86,7 @@ body {
 
 .btn1{
   position:relative;
-	top: 20px;
+	top: 5px;
   text-align: center;
   padding: .5em .75em;
   background: #E3562A;
