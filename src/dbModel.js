@@ -110,7 +110,7 @@ user.sync({force:true}).then(() => {
 image.sync({force:true}).then(() => {console.log('Image table connected');
     image.create({
         id : 1,
-        animals : { '개구리' : 'undifined.jpg'},
+        animals : { '개구리' : '1_dummy.jpg'},
     });
 });
 score.sync({force:true}).then(() => {console.log('user score table connected');

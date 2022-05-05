@@ -3,3 +3,4 @@ node_modules/
 user_images/*
 
 !user_images/undifined.jpg
+!user_images/1_dummy.jpg
