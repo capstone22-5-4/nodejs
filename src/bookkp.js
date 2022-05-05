@@ -52,7 +52,7 @@ function putImage(req,res){
         }).then((results) => {
             var has_list = results.dataValues.animals;
             if (has_list[req.params.animal])
-                fs.unlink(has_list[req.params.animal], function(err){
+                fs.unlink('/home/ubuntu/nodejs/user_images/'+has_list[req.params.animal], function(err){
                     if(err)
                         console.log("Error : ", err);
                 });
