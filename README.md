@@ -74,33 +74,29 @@ nickname 과 email 반환
 # 
 # 이미지 목록과 이미지 업로드
 #
-## 이미지 업로드
+## 가지고 있는 이미지 목록
 로그인 되어있는 상태에서  
-url : http://IP:PORT/book/upload/(동물이름)  
-하나씩만 업로드  
-### header : 
-> POST 형식  
-> content-type : multipart/form-data  
-### body : 
-> image : (FILE)  
-### return : 
-|     cause     | status | content        |
-|:-------------:|:------:|----------------|
-|   요청 성공   |   200  | "update lists" |
-| 비로그인 상태 |   401  | "log in first" |
-#
-## 이미지 목록
-로그인 되어있는 상태에서  
-url : http://IP:PORT/book/list  
+url : http://IP:PORT/book/list/has  
 ### header :
 > GET 형식
 ## return :
 |     cause     | status | content                                                 |
 |:-------------:|:------:|---------------------------------------------------------|
-|   요청 성공   |   200  | { has : { 동물 : 파일 명, ... }, less : { 동물, ... } }   |
+|   요청 성공   |   200  | [{ no:1, animalName:동물이름, photo:파일 명 }, ... ]     |
 | 비로그인 상태 |   401  | "login first"                                            |
 #
-## 이미지 목록
+## 가지고 있지 않은 이미지 목록
+로그인 되어있는 상태에서  
+url : http://IP:PORT/book/list/less  
+### header :
+> GET 형식
+## return :
+|     cause     | status | content                       |
+|:-------------:|:------:|-------------------------------|
+|   요청 성공   |   200  | [ 동물1, 동물2, 동물3, ...]     |
+| 비로그인 상태 |   401  | "login first"                  |
+#
+## 다른사람 이미지 목록
 로그인 되어있는 상태에서  
 url : http://IP:PORT/book/list/(닉네임)  
 ### header :
