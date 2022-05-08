@@ -31,14 +31,13 @@ router.post('/upload/:animal',upload.single('image'), putImage);
 router.get('/list', getMyBook);
 router.get('/list/has', getHas);
 router.get('/list/less', getLess);
+router.get('/list/rand', getSomeBook);
 router.get('/list/:nickname', getOtherBook);
 
 router.use(express.static('/home/ubuntu/nodejs/user_images'));
 // router.use(express.static(process.env.PWD + '/user_images'));
 
 module.exports = router;
-
-
 
 
 
@@ -60,9 +59,15 @@ function putImage(req,res){
 
             userdb.images.update( 
                 { animals : has_list},
-                { where: { id: user}}).then(results => {
-                    res.status(200).send('update lists');
-                })
+                { where: { id: user}}).then(() => {
+                    userdb.score
+                    .increment({score:10,credit:10}, {where:{id:user}})
+                    .then((result) => {
+                        res.status(200).send('update lists');
+                    }).catch((err) => {
+                        console.error(err);
+                    });
+                });
         });
     } else res.status(401).send('log in first');
 }
@@ -155,4 +160,8 @@ function getOtherBook(req,res){
             } else              { res.status(202).send('check the nickname');}
         })
     } else                      { res.status(401).send('login first');}
+}
+
+function getSomeBook(req,res){
+
 }
