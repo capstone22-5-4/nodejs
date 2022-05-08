@@ -36,7 +36,7 @@ url : http://IP:PORT/user/login
 ### return : 
 |    cause    | status | content                                    |
 |:-----------:|:------:|--------------------------------------------|
-| 로그인 성공 |   200  | { "email": "email", "nickname":"nickname"} |
+| 로그인 성공 |   200  | { "email": "email", "nickname":"nickname", "score": 10, "credit : 10} |
 | 로그인 실패 |   401  | "Unauthorized"                             |
 #
 ## 로그아웃
@@ -118,3 +118,26 @@ url : http://IP:PORT/book/list/(닉네임)
 url : http://IP:PORT/analmal
 ### header :
 > GET 형식
+#
+## 코인 보유량
+url : http://IP:PORT/credit  
+### header :
+> GET 형식
+## return :
+|     cause     | status | content                    |
+|:-------------:|:------:|----------------------------|
+|   요청 성공   |   200  | 100 (가지고 있는 코인의 수)  |
+| 비로그인 상태 |   401  | "login first"               |
+#
+# 상점과 점수
+#
+## 내 점수
+url : http://IP:PORT/score  
+### header :
+> GET 형식
+## return :
+|     cause     | status | content         |
+|:-------------:|:------:|-----------------|
+|   요청 성공   |   200  | 100 (나의 점수)  |
+| 비로그인 상태 |   401  | "login first"    |
+#
