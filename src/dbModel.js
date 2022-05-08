@@ -17,7 +17,7 @@ var user = sequelize.define('users', {
                  primaryKey : true,
                  autoIncrement : true },
     email : {    type : Sequelize.STRING,
-                 allowNull : false},
+                 allowNull : false },
     nickname : { type : Sequelize.STRING,
                  allowNull : false },
     name : {     type : Sequelize.STRING,
@@ -110,12 +110,14 @@ user.sync({force:true}).then(() => {
 image.sync({force:true}).then(() => {console.log('Image table connected');
     image.create({
         id : 1,
-        animals : { '개구리' : '1_dummy.jpg'},
+        animals : { '거북' : '1_dummy.jpg'},
     });
 });
 score.sync({force:true}).then(() => {console.log('user score table connected');
     score.create({
-        id : 1
+        id : 1,
+        credit : 10,
+        score : 10
     });
 });
 animals.sync({force:true}).then(() => {console.log('base animal table connected');
