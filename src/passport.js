@@ -43,10 +43,17 @@ function login(email,pw, done){
             return done(null,false, { message : 'Incorrect pw'});
         }
 
-        user_info.email = email;
-        user_info.id = results.id;
-        user_info.nickname = results.nickname;
+        mydb.score.findOne({
+            where : {id : results.id},
+            attributes:['score','credit']
+        }).then((result) => {
+            user_info.email = email;
+            user_info.id = results.id;
+            user_info.nickname = results.nickname;
+            user_info.score = result.score;
+            user_info.credit =  result.credit;
 
-        return done(null, user_info);
+            return done(null, user_info);
+        })
     });
 }
