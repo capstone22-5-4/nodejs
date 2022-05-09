@@ -39,6 +39,16 @@ url : http://IP:PORT/user/login
 | 로그인 성공 |   200  | { "email": "email", "nickname":"nickname", "score": 10, "credit : 10} |
 | 로그인 실패 |   401  | "Unauthorized"                             |
 #
+## 현재 로그인 상태
+url : http://IP:PORT/user/islogin  
+### header :
+> Get 형식    
+### return : 
+|    cause     | status | content |
+|:------------:|:------:|--------|
+| 로그인 상태   |   200  |  true  |
+| 비로그인 상태 |   202  |  false |
+#
 ## 로그아웃
 로그인 되어있는 상태에서  
 url : http://IP:PORT/user/logout
@@ -102,11 +112,11 @@ url : http://IP:PORT/book/list/(닉네임)
 ### header :
 > GET 형식
 ## return :
-|     cause     | status | content                                                 |
-|:-------------:|:------:|---------------------------------------------------------|
-|   요청 성공   |   200  | { has : { 동물 : 파일 명, ... }, less : { 동물, ... } }   |
-|  닉네임 없음  |   202  | "check the nickname"                                     |
-| 비로그인 상태 |   401  | "login first"                                            |
+|     cause     | status | content                                              |
+|:-------------:|:------:|------------------------------------------------------|
+|   요청 성공   |   200  | [{ no:1, animalName:동물이름, photo:파일 명 }, ... ]   |
+|  닉네임 없음  |   202  | "check the nickname"                                  |
+| 비로그인 상태 |   401  | "login first"                                         |
 #
 #
 ## 사용 방법
@@ -140,4 +150,14 @@ url : http://IP:PORT/score
 |:-------------:|:------:|-----------------|
 |   요청 성공   |   200  | 100 (나의 점수)  |
 | 비로그인 상태 |   401  | "login first"    |
+#
+## 전체랭킹
+url : http://IP:PORT/top10  
+### header :
+> GET 형식
+## return :
+|    cause   | status | content                                                 |
+|:----------:|:------:|---------------------------------------------------------|
+|  요청 성공  |   200  | [{no : 1, score : 10, nickname : "nick"}, {no : 2}...]  |
+|  요청 실패  |   401  | "Wrong Url"                                            |
 #
