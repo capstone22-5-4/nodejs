@@ -28,7 +28,6 @@ const upload = multer({
 const animal_list = fs.readFileSync('./animals.txt', 'utf8').split('\n');
 
 router.post('/upload/:animal',upload.single('image'), putImage);
-router.get('/list', getMyBook);
 router.get('/list/has', getHas);
 router.get('/list/less', getLess);
 router.get('/list/rand', getSomeBook);
@@ -117,29 +116,11 @@ function getLess(req,res){
     } else              { res.status(401).send('login first'); }
 }
 
-function getMyBook(req,res){
-    var user = req.user;
-    if (user){
-        userdb.images.findOne({
-            where : { id : user },
-            attributes : ['animals']
-        }).then((results) => {
-            if (results){
-                var less_animals = animal_list;
-                for (const key of Object.keys(results.animals)){
-                    const idx = less_animals.indexOf(key);
-                    less_animals.splice(idx,1);
-                }
-                          res.status(200).send({has : results.animals, less : less_animals});
-            } else      { res.status(202).send('no user'); }
-        });
-    } else              { res.status(401).send('login first'); }
-}
-
 function getOtherBook(req,res){
     var user = req.user;
+    console.log(req.params.nickname)
     if (user){
-        userdb.user.findOne({
+        userdb.users.findOne({
             where : {nickname : req.params.nickname },
             attributes : ['id']
         }).then((results) => {
@@ -147,15 +128,19 @@ function getOtherBook(req,res){
                 userdb.images.findOne({
                     where : { id : results.id },
                     attributes : ['animals']
-                }).then((results) => {
-                    if (results){
-                        var less_animals = animal_list;
-                        for (const key of Object.keys(results.animals)){
-                            const idx = less_animals.indexOf(key);
-                            less_animals.splice(idx,1);
+                }).then((results2) => {
+                    if (results2){
+                        var sendList = new Array();
+                        var index = 1;
+                        for (const key of Object.keys(results2.animals)){
+                            var data = new Object();
+                            data.no = index++;
+                            data.animalName = key;
+                            data.photo = results2.animals[key];
+                            sendList.push(data);
                         }
-                                  res.status(200).send({has : results.animals, less : less_animals});
-                    } else      { res.status(202).send('no user')}
+                                  res.status(200).send(JSON.stringify(sendList));
+                    }else       { res.status(202).send('no user');}
                 });
             } else              { res.status(202).send('check the nickname');}
         })
