@@ -3,7 +3,7 @@ const router = express.Router();
 
 const fs = require('fs');
 const userdb = require('./dbModel');
-const passport = require('passport');
+const Sequelize = require('sequelize');
 
 const multer = require('multer');
 const storage = multer.diskStorage({
@@ -118,7 +118,6 @@ function getLess(req,res){
 
 function getOtherBook(req,res){
     var user = req.user;
-    console.log(req.params.nickname)
     if (user){
         userdb.users.findOne({
             where : {nickname : req.params.nickname },
@@ -139,6 +138,7 @@ function getOtherBook(req,res){
                             data.photo = results2.animals[key];
                             sendList.push(data);
                         }
+                        console.log(user, "visit", req.params.nickname, "force");
                                   res.status(200).send(JSON.stringify(sendList));
                     }else       { res.status(202).send('no user');}
                 });
@@ -148,5 +148,24 @@ function getOtherBook(req,res){
 }
 
 function getSomeBook(req,res){
-
+    var user = req.user;
+    if (user){
+        userdb.images.findOne(
+            {order : Sequelize.literal('rand()'), 
+            attributes : ['animals', 'id']
+        })
+        .then((results) => {
+            var sendList = new Array();
+            var index = 1;
+            for (const key of Object.keys(results.animals)){
+                var data = new Object();
+                data.no = index++;
+                data.animalName = key;
+                data.photo = results.animals[key];
+                sendList.push(data);
+            }
+            console.log(user, "visit", results.id, "rand");
+                 res.status(200).send(JSON.stringify(sendList));
+        });
+    } else     { res.status(401).send('login first');}
 }
