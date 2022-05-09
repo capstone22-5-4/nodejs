@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const mydb = require('./dbModel');
-const passport = require('passport');
+const Sequelize = require('sequelize');
 
 const fs = require('fs');
 
 
-router.get('/rank', ranklist);
+router.get('/top:lim', rank10);
 router.post('/buyfood', buyfood);
 router.get('/shop', foodlist);
 router.get('/credit', getCredit);
@@ -21,19 +21,32 @@ router.use(express.static('/home/ubuntu/nodejs/base'));
 
 module.exports = router;
 
-async function ranklist(req,res){
-    var user = req.user;
-    var ranking
-    if (user){
-        ranking['I'] = await mydb.score.findOne({
-            where : {id : user},
-            attributes : ['score']
-        })
-    } else { ranking['I'] = null}
-    mydb.score.findAll({
-        
-    });
-}
+async function rank10(req,res){
+    var limit = parseInt(req.params.lim)
+    if(limit < 20){
+    const results = await mydb.score.findAll({
+        attributes : ['id', 'score',
+        [Sequelize.literal('(RANK() OVER (ORDER BY score DESC))'), 'rank']],
+        limit : parseInt(req.params.lim)});
+
+    var resList = new Array();
+    var index = 1;
+    console.log(results)
+    for (const element of results){
+        var oneData = new Object();
+        const results2 = await mydb.users.findOne({
+            where : {id : element.id},
+            attributes : ['nickname']
+        });
+        oneData.no = index++;
+        oneData.score = element.score;
+        oneData.nickname = results2.nickname;
+        resList.push(oneData);
+    }
+            res.status(200).send(resList);
+    } else            res.status(401).send("Wrong Url");
+};
+
 function getCredit(req, res){
     var user = req.user;
     if (user){
