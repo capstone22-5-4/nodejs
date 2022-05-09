@@ -118,6 +118,17 @@ url : http://IP:PORT/book/list/(닉네임)
 |  닉네임 없음  |   202  | "check the nickname"                                  |
 | 비로그인 상태 |   401  | "login first"                                         |
 #
+## 랜덤 이미지 목록 (본인포함)
+로그인 되어있는 상태에서  
+url : http://IP:PORT/book/list/rand  
+### header :
+> GET 형식
+## return :
+|     cause     | status | content                                              |
+|:-------------:|:------:|------------------------------------------------------|
+|   요청 성공   |   200  | [{ no:1, animalName:동물이름, photo:파일 명 }, ... ]   |
+| 비로그인 상태 |   401  | "login first"                                         |
+#
 #
 ## 사용 방법
 > react-native : <Image source={{uri : "/book/파일 명"}} />  
