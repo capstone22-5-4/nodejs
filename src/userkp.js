@@ -5,6 +5,7 @@ const passport = require('passport');
 const crypto = require('crypto');
 const Op = require('sequelize').Op;
 
+router.get('/islogin', islogin);
 router.post('/signup', signup);
 router.delete('/signout', signout);
 router.post('/login',passport.authenticate('local'), 
@@ -24,6 +25,11 @@ router.get('/detail',getdetail);
 
 module.exports = router;
 
+function islogin(req,res){
+    var user = req.user;
+    if (user)   res.status(200).send(true);
+    else        res.status(202).send(false);
+}
 
 function signup(req,res){
     const {email, pw, name, nickname} = req.body;
