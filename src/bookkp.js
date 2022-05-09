@@ -148,29 +148,31 @@ function getOtherBook(req,res){
     } else                      { res.status(401).send('login first');}
 }
 
-function getSomeBook(req,res){
+async function getSomeBook(req,res){
     var user = req.user;
     if (user){
-        userdb.images.findOne( 
+        const results = await userdb.images.findOne( 
             {order : Sequelize.literal('rand()'), 
             attributes : ['animals', 'id'],
             where : {
                 [Op.not] : {id : user} 
-        }})
-        .then((results) => {
-            if(results){
-                var sendList = new Array();
-                var index = 1;
-                for (const key of Object.keys(results.animals)){
-                    var data = new Object();
-                    data.no = index++;
-                    data.animalName = key;
-                    data.photo = results.animals[key];
-                    sendList.push(data);
-                }
-                console.log(user, "visit", results.id, "rand");
-                    res.status(200).send(JSON.stringify(sendList));
-            } else  res.status(401).send('no user without you');
-        });
-    } else          res.status(401).send('login first');
+        }});
+        if(results){
+            const somebody = await userdb.users.findOne(
+                { where : { id : results.id},
+                attributes : ['nickname']});
+            var sendList = new Array();
+            sendList.push(somebody.nickname);
+            var index = 1;
+            for (const key of Object.keys(results.animals)){
+                var data = new Object();
+                data.no = index++;
+                data.animalName = key;
+                data.photo = results.animals[key];
+                sendList.push(data);
+            }
+            console.log(user, "visit", results.id, "rand");
+                res.status(200).send(JSON.stringify(sendList));
+        } else  res.status(401).send('no user without you');
+    } else      res.status(401).send('login first');
 }
