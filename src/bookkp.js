@@ -4,6 +4,7 @@ const router = express.Router();
 const fs = require('fs');
 const userdb = require('./dbModel');
 const Sequelize = require('sequelize');
+const Op = require('sequelize').Op;
 
 const multer = require('multer');
 const storage = multer.diskStorage({
@@ -150,22 +151,26 @@ function getOtherBook(req,res){
 function getSomeBook(req,res){
     var user = req.user;
     if (user){
-        userdb.images.findOne(
+        userdb.images.findOne( 
             {order : Sequelize.literal('rand()'), 
-            attributes : ['animals', 'id']
-        })
+            attributes : ['animals', 'id'],
+            where : {
+                [Op.not] : {id : user} 
+        }})
         .then((results) => {
-            var sendList = new Array();
-            var index = 1;
-            for (const key of Object.keys(results.animals)){
-                var data = new Object();
-                data.no = index++;
-                data.animalName = key;
-                data.photo = results.animals[key];
-                sendList.push(data);
-            }
-            console.log(user, "visit", results.id, "rand");
-                 res.status(200).send(JSON.stringify(sendList));
+            if(results){
+                var sendList = new Array();
+                var index = 1;
+                for (const key of Object.keys(results.animals)){
+                    var data = new Object();
+                    data.no = index++;
+                    data.animalName = key;
+                    data.photo = results.animals[key];
+                    sendList.push(data);
+                }
+                console.log(user, "visit", results.id, "rand");
+                    res.status(200).send(JSON.stringify(sendList));
+            } else  res.status(401).send('no user without you');
         });
-    } else     { res.status(401).send('login first');}
+    } else          res.status(401).send('login first');
 }
