@@ -172,3 +172,49 @@ url : http://IP:PORT/top10
 |  요청 성공  |   200  | [{no : 1, score : 10, nickname : "nick"}, {no : 2}...]  |
 |  요청 실패  |   401  | "Wrong Url"                                            |
 #
+## 내 먹이 리스트
+url : http://IP:PORT/foodlist
+### header :
+> GET 형식  
+### return : 
+|     cause     | status | content                        |
+|:-------------:|:------:|--------------------------------|
+|   요청 성공   |   200  |  { ("food_name") : (개수), ...} |
+| 비로그인 상태 |   401  | "login first"                   |
+#
+## 내 먹이 추가
+url : http://IP:PORT/buyfood
+### header :
+> POST 형식
+> content-type : x-www-form-urlencoded  
+### body :
+> food_name : (먹이 이름)  
+> cost : (뺄 코인)  
+### return : 
+|     cause     | status | content           |
+|:-------------:|:------:|-------------------|
+|   요청 성공   |   200  |  "buy" + food_name |
+| 비로그인 상태 |   401  | "login first"      |
+#
+## 내 먹이 사용
+url : http://IP:PORT/use(먹이 이름)
+### header :
+> GET 형식
+### return : 
+|     cause     | status | content           |
+|:-------------:|:------:|-------------------|
+|   요청 성공   |   200  |  "use" + food_name |
+| 비로그인 상태 |   401  | "login first"      |
+#
+#
+#
+## 점수,코인 강제추가
+url : http://IP:PORT/addscore(score)  
+### header : 
+> GET 형식
+### return : 
+|     cause     | status | content                           |
+|:-------------:|:------:|-----------------------------------|
+|   요청 성공   |   200  |  "add" (score) "score and credit" |
+| 비로그인 상태 |   401  | "login first"                      |
+#
