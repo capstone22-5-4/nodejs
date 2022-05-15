@@ -68,7 +68,9 @@ var has_foods = sequelize.define('user_foods', {
     id : {      type : Sequelize.INTEGER,
                 primaryKey : true },
     foods : {   type : Sequelize.JSON, 
-                defaultValue : {} }
+                defaultValue : 
+                {"사과":0, "대나무":0, "물고기":0, 
+                "사료":0, "소고기":0, "지렁이":0, "풀":0 } }
 }, { createdAt : false });
 
 var achivements = sequelize.define('achivement', {
