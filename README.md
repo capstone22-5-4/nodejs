@@ -206,7 +206,7 @@ url : http://IP:PORT/use(먹이 이름)
 |   요청 성공   |   200  |  "use" + food_name |
 | 비로그인 상태 |   401  | "login first"      |
 #
-## 내 먹이 사용
+## gps 데이터 
 url : http://IP:PORT/gpsData
 ### header :
 > GET 형식
