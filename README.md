@@ -206,6 +206,15 @@ url : http://IP:PORT/use(먹이 이름)
 |   요청 성공   |   200  |  "use" + food_name |
 | 비로그인 상태 |   401  | "login first"      |
 #
+## 내 먹이 사용
+url : http://IP:PORT/gpsData
+### header :
+> GET 형식
+### return : 
+|     cause     | status | content                                                             |
+|:-------------:|:------:|---------------------------------------------------------------------|
+|   요청 성공   |   200  |  [{ "animal_name": "  ", "latitude": 0.000, "longitude": 0.0}, ... ] |
+#
 #
 #
 ## 점수,코인 강제추가

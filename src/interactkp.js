@@ -19,6 +19,7 @@ router.get('/analmal',(req,res) =>{
     // res.sendFile('/base/index.html', { root : process.env.PWD });
 });
 
+router.get('/gpsData', getGpsData);
 
 router.use(express.static('/home/ubuntu/nodejs/base'));
 // router.use(express.static(process.env.PWD+'/base'));
@@ -148,8 +149,16 @@ function getScore(req, res){
             attributes : ['score']
         }).then((results) => {
             if (results){
-                      res.status(200).send(String(results.credit));
+                      res.status(200).send(String(results.score));
             }else   { res.status(202).send('no user');}
         });
     } else          { res.status(401).send('login first');}
+}
+
+function getGpsData(req,res){
+    mydb.gps.findAll({
+        attributes : [ 'animal_name', 'latitude', 'longitude']
+    }).then((results) => {
+        res.status(200).send(results);
+    });
 }

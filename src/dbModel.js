@@ -99,6 +99,19 @@ var to_feed = sequelize.define('to_feed', {
             primaryKey : true }
 }, { createdAt : false, updatedAt : false });
 
+var gpsData = sequelize.define('gps', {
+    id : { type : Sequelize.INTEGER,
+            allowNull : false,
+            autoIncrement : true,
+            primaryKey : true },
+    animal_name : { type : Sequelize.STRING,
+                    allowNull : false },
+    latitude : { type : Sequelize.DOUBLE,
+                    allowNull : false },
+    longitude : { type : Sequelize.DOUBLE, 
+                    allowNull : false } 
+}, { updatedAt : false});
+
 
 user.sync({force:true}).then(() => {
     console.log('User table connected');
@@ -141,7 +154,7 @@ has_foods.sync({force:true}).then(() => {console.log('user foods table connected
         foods : {}
     });
 });
-to_feed.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
+gpsData.sync({force:true}).then(() => console.log('gps table connected'));
 achivements.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
 user_achivement.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
 
@@ -153,7 +166,7 @@ module.exports ={
     animals : animals,
     foods : foods,
     has_foods : has_foods,
-    to_feed : to_feed,
+    gps : gpsData,
     achivements : achivements,
     user_achivement : user_achivement
 };

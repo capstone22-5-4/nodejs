@@ -6,6 +6,7 @@ const userdb = require('./dbModel');
 const Sequelize = require('sequelize');
 const Op = require('sequelize').Op;
 
+const exif = require('exifreader');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination(req, file, callback){
@@ -27,7 +28,6 @@ const upload = multer({
     storage, limits:{ files:10 }});
 
 const animal_list = fs.readFileSync('./animals.txt', 'utf8').split('\n');
-
 router.post('/upload/:animal',upload.single('image'), putImage);
 router.get('/list/has', getHas);
 router.get('/list/less', getLess);
@@ -41,7 +41,7 @@ module.exports = router;
 
 
 
-function putImage(req,res){
+async function putImage(req,res){
     const { filename } = req.file;
     var user = req.user;
     if(user){
@@ -70,6 +70,18 @@ function putImage(req,res){
                 });
         });
     } else res.status(401).send('log in first');
+    
+    // const tags = await exif.load(process.env.PWD+'/user_images/'+filename);
+    const tags = await exif.load('/home/ubuntu/nodejs/user_images/'+filename);
+    if (tags.GPSLatitude && tags.GPSLongitude){
+        latitude = tags.GPSLatitude.description;
+        longitude = tags.GPSLongitude.description;
+        userdb.gps.create({
+            animal_name : req.params.animal,
+            latitude : latitude,
+            longitude : longitude
+        });
+    }
 }
 
 function getHas(req,res){
