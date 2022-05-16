@@ -6,7 +6,6 @@ const userdb = require('./dbModel');
 const Sequelize = require('sequelize');
 const Op = require('sequelize').Op;
 
-const exif = require('exifreader');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination(req, file, callback){
@@ -70,18 +69,6 @@ function putImage(req,res){
                 });
         });
     } else res.status(401).send('log in first');
-    exif.load('/home/ubuntu/nodejs/user_images/'+filename).then((tags) => {
-    // exif.load(process.env.PWD+'/user_images/'+filename).then((tags) => {
-        if (tags.GPSLatitude && tags.GPSLongitude){
-            latitude = tags.GPSLatitude.description;
-            longitude = tags.GPSLongitude.description;
-            userdb.gps.create({
-                animal_name : req.params.animal,
-                latitude : latitude,
-                longitude : longitude
-            });
-        }
-    });
 }
 
 function getHas(req,res){
