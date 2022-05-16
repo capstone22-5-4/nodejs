@@ -20,12 +20,22 @@ router.get('/analmal',(req,res) =>{
 });
 
 router.get('/gpsData', getGpsData);
+router.post('/gps/:animal', putGPS);
 
 router.use(express.static('/home/ubuntu/nodejs/base'));
 // router.use(express.static(process.env.PWD+'/base'));
 
 module.exports = router;
 
+
+function putGPS(req, res){
+    const { latitude, longitude } = req.body;
+    mydb.gps.create({
+        animal_name : req.params.animal,
+        latitude : latitude,
+        longitude : longitude
+    });
+}
 
 function usefood(req,res){
     const user = req.user;

@@ -56,6 +56,7 @@
     -->
 		<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 		<script>
 
 			var triggerUpload = document.getElementById('triggerUpload'),
@@ -164,6 +165,26 @@
 
 					request.addEventListener("load", reqListener);
 					request.send(formData);
+
+					image.exifdata = null;
+					EXIF.getData(image, function(){
+						var allMetaData = EXIF.getAllTags(this);
+						var lati_arr = allMetaData.GPSLatitude;
+						var long_arr = allMetaData.GPSLongitude;
+						if  (lati_arr && long_arr){
+							var lati = lati_arr[0] + lati_arr[1]/60+lati_arr[2]/3600
+							var long = long_arr[0] + long_arr[1]/60+long_arr[2]/3600
+							var request2 = new XMLHttpRequest();
+							request2.open("POST", "http://127.0.0.1:8880/gps/"+prediction[0].className);
+							request2.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+							request2.onreadystatechange = function(){ console.log('send'); };
+							var sendS = 'latitude='+String(lati)+'&longitude='+String(long);
+							console.log(sendS);
+							request2.send(sendS);
+						}
+						else console.log("no GPS data")
+					});
+					
 				}
 				else 
 					Swal.fire({
