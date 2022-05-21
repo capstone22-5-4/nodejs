@@ -222,15 +222,45 @@ url : http://IP:PORT/gpsData
 |:-------------:|:------:|---------------------------------------------------------------------|
 |   요청 성공   |   200  |  [{ "animal_name": "  ", "latitude": 0.000, "longitude": 0.0}, ... ] |
 #
+## 업적횟수추가
+url : http://IP:PORT/putachieve
+### header :
+> GET 형식
+### return : 
+|     cause     | status | content       |
+|:-------------:|:------:|---------------|
+|   요청 성공   |   200  |  "achieve one" |
+| 비로그인 상태 |   401  | "login first"  |
+#
+## 업적횟수
+url : http://IP:PORT/getachieve
+### header :
+> GET 형식
+### return : 
+|     cause     | status | content       |
+|:-------------:|:------:|---------------|
+|   요청 성공   |   200  |  "(count)"     |
+| 비로그인 상태 |   401  | "login first"  |
 #
 #
-## 점수,코인 강제추가
+#
+## 점수 강제추가
 url : http://IP:PORT/addscore(score)  
 ### header : 
 > GET 형식
 ### return : 
-|     cause     | status | content                           |
-|:-------------:|:------:|-----------------------------------|
-|   요청 성공   |   200  |  "add" (score) "score and credit" |
-| 비로그인 상태 |   401  | "login first"                      |
+|     cause     | status | content              |
+|:-------------:|:------:|----------------------|
+|   요청 성공   |   200  |  "add (score) score " |
+| 비로그인 상태 |   401  | "login first"         |
+#
+## 코인 강제추가
+url : http://IP:PORT/addcoin(coin)  
+### header : 
+> GET 형식
+### return : 
+|     cause     | status | content             |
+|:-------------:|:------:|---------------------|
+|   요청 성공   |   200  |  "add (coin) credit" |
+| 비로그인 상태 |   401  | "login first"        |
 #

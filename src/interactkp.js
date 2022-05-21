@@ -14,6 +14,11 @@ router.get('/foodlist', foodlist);
 router.get('/credit', getCredit);
 router.get('/score', getScore);
 router.get('/addscore:pscore', putScore);
+router.get('/addcoin:pcoin', putCoin);
+
+router.get('/putachieve', plusAchieve);
+router.get('/getachieve', getAchieve);
+
 router.get('/analmal',(req,res) =>{
     res.sendFile('/home/ubuntu/nodejs/base/index.html');
     // res.sendFile('/base/index.html', { root : process.env.PWD });
@@ -27,6 +32,30 @@ router.use(express.static('/home/ubuntu/nodejs/base'));
 
 module.exports = router;
 
+
+function getAchieve(req,res){
+    const user = req.user;
+    if (user){
+        mydb.user_achivement.findOne({
+            where : { id : user},
+            attributes : ['count']
+        }).then((results) => {
+            res.status(200).send(results.count.toString());
+        });
+    } else  res.status(401).send('login first');
+}
+
+function plusAchieve(req,res){
+    const user = req.user;
+    if (user){
+        mydb.user_achivement.increment(
+            { count : 1 },
+            { where : { id : user }}
+        ).then((results) => {
+            res.status(200).send("achieve one");
+        });
+    } else          res.status(401).send('login first');
+}
 
 function putGPS(req, res){
     const { latitude, longitude } = req.body;
@@ -61,10 +90,23 @@ function putScore(req,res){
     const pscore = req.params.pscore;
     if (user) {
         mydb.score.increment(
-            { score : pscore, credit : pscore},
+            { score : pscore },
             { where : {id:user}})
             .then((results) => {
-                res.status(200).send('add '+pscore+' score and credit');
+                res.status(200).send('add '+pscore+' score');
+            });
+    } else      res.status(401).send('login first');
+}
+
+function putCoin(req,res){
+    const user = req.user;
+    const pcoin = req.params.pcoin;
+    if (user) {
+        mydb.score.increment(
+            { credit : pcoin },
+            { where : {id:user}})
+            .then((results) => {
+                res.status(200).send('add '+pcoin+' credit');
             });
     } else      res.status(401).send('login first');
 }

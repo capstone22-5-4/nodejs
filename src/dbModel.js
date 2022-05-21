@@ -73,31 +73,12 @@ var has_foods = sequelize.define('user_foods', {
                 "사료":0, "소고기":0, "지렁이":0, "풀":0 } }
 }, { createdAt : false });
 
-var achivements = sequelize.define('achivement', {
-    id : {              type : Sequelize.INTEGER,
-                        primaryKey : true,
-                        autoIncrement : true },
-    achivement_name : { type : Sequelize.STRING,
-                        allowNull : false },
-    score : {           type : Sequelize.INTEGER,
-                        defaultValue : 0 }
-}, { createdAt : false, updatedAt : false });
-
 var user_achivement = sequelize.define('user_achive', {
-    id : {  type : Sequelize.INTEGER,
-            primaryKey : true },
-    achives : { type : Sequelize.JSON,
-                defaultValue : {} }
+    id : {    type : Sequelize.INTEGER,
+              primaryKey : true },
+    count : { type : Sequelize.INTEGER,
+              defaultValue : 0 }
 }, { updatedAt : false });
-
-var to_feed = sequelize.define('to_feed', {
-    id : { type : Sequelize.INTEGER, 
-            allowNull : false,
-            primaryKey : true },
-    food_id : { type : Sequelize.INTEGER,
-            defaultValue : 0,
-            primaryKey : true }
-}, { createdAt : false, updatedAt : false });
 
 var gpsData = sequelize.define('gps', {
     id : { type : Sequelize.INTEGER,
@@ -113,49 +94,13 @@ var gpsData = sequelize.define('gps', {
 }, { updatedAt : false});
 
 
-user.sync({force:true}).then(() => {
-    console.log('User table connected');
-    user.create({
-        email : 'first@abcd.efg',
-        nickname : 'sample',
-        name : 'caps',
-        salt_key : 'sampleSalt',
-        password : 'ac8d85f18cb8fd8e7f7b4dd0c23cf0a07675b3bf3e491bc62be070ee3699b50d',
-    });});
-image.sync({force:true}).then(() => {console.log('Image table connected');
-    image.create({
-        id : 1,
-        animals : { '거북' : '1_dummy.jpg'},
-    });
-});
-score.sync({force:true}).then(() => {console.log('user score table connected');
-    score.create({
-        id : 1,
-        credit : 10,
-        score : 10
-    });
-});
-animals.sync({force:true}).then(() => {console.log('base animal table connected');
-    const animal_list = fs.readFileSync('./animals.txt', 'utf8').split('\n');
-    for (const key of animal_list){
-        animals.create({ animal_name : key }); 
-    }
-});
-foods.sync({force:true}).then(() => {console.log('base food table connected');
-    foods.create({
-        food_name : 'dummy_food',
-        image_url : 'dummy_food.png',
-        food_cost : 100
-    });
-});
-has_foods.sync({force:true}).then(() => {console.log('user foods table connected');
-    has_foods.create({
-        id : 1,
-        foods : {}
-    });
-});
-gpsData.sync({force:true}).then(() => console.log('gps table connected'));
-achivements.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
+user.sync().then(() => {console.log('User table connected');});
+image.sync().then(() => {console.log('Image table connected');});
+score.sync().then(() => {console.log('user score table connected');});
+animals.sync().then(() => {console.log('base animal table connected');});
+foods.sync().then(() => {console.log('base food table connected');});
+has_foods.sync().then(() => {console.log('user foods table connected');});
+gpsData.sync().then(() => console.log('gps table connected'));
 user_achivement.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
 
 
@@ -167,6 +112,5 @@ module.exports ={
     foods : foods,
     has_foods : has_foods,
     gps : gpsData,
-    achivements : achivements,
     user_achivement : user_achivement
 };
