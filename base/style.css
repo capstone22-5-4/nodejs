@@ -47,6 +47,8 @@ img{
 	  object-fit: contain;
 }
 .preview{
+  display : flex;
+  justify-content: center;
   position: relative;
   width: 200px;
   height: 200px;
