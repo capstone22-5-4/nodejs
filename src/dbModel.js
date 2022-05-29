@@ -98,7 +98,10 @@ has_foods.sync({force:true}).then(() => {console.log('user foods table connected
         id : 1
     });});
 gpsData.sync({force:true}).then(() => console.log('gps table connected'));
-user_achivement.sync({force:true}).then(() => {console.log('base achivemnets table connected');});
+user_achivement.sync({force:true}).then(() => {console.log('base achivemnets table connected');
+    user_achivement.create({
+        id : 1
+    });});
 
 
 module.exports ={

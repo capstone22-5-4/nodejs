@@ -8,8 +8,6 @@ section{
   transform: translate(-50%, -50%);
   text-align: center;
   padding: 1.5em .75em;
-  border: 1px solid #e8e8e8;
-  border-radius: 6px;
   background: #fff;
 }
 
@@ -83,7 +81,7 @@ img{
 
 
 body {
-  background: #f6f6f6;
+  background: #fff;
 }
 
 .btn1{

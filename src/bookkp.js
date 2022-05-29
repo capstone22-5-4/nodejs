@@ -104,9 +104,10 @@ function getLess(req,res){
             if (results){
                 let less_animals = [];
                 for (const i in animal_list)
-                    less_animals.push(animal_list[i]);
+                    less_animals.push(animal_list[i].substring(0, animal_list[i].length-1));
+                less_animals.pop();
                 for (const key of Object.keys(results.animals)){
-                    const idx = less_animals.indexOf(key+'\r');
+                    const idx = less_animals.indexOf(key);
                     if(idx != -1)
                         less_animals.splice(idx,1);
                 }
